@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roche · Aurivian Pulse · ASCO 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #F8F8F5;
+  --card:      #FFFFFF;
+  --offset:    #F1F1ED;
+  --border:    rgba(20,22,26,0.07);
+  --border-md: rgba(20,22,26,0.12);
+  --text:      #14161A;
+  --muted:     #5A5E62;
+  --subtle:    rgba(20,22,26,0.03);
+
+  --green:     #3FA56A;
+  --green-dim: rgba(63,165,106,0.10);
+  --amber:     #E0A12E;
+  --amber-dim: rgba(224,161,46,0.10);
+  --red:       #DC4A41;
+  --red-dim:   rgba(220,74,65,0.10);
+  --info:      #3B82F6;
+  --info-dim:  rgba(59,130,246,0.10);
+  --emerging:  #8B7CF0;
+  --emg-dim:   rgba(139,124,240,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--offset); }
+::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 2px; }
+
+/* ── SHELL ─────────────────────────────────── */
+#shell {
+  display: grid;
+  grid-template-columns: 236px 1fr;
+  grid-template-rows: 48px 1fr;
+  grid-template-areas: "topbar topbar" "sidebar main";
+  height: 100vh;
+  overflow: hidden;
+  transition: grid-template-columns 0.22s ease;
+}
+#shell.collapsed { grid-template-columns: 0px 1fr; }
+
+/* ── TOPBAR ────────────────────────────────── */
+#topbar {
+  grid-area: topbar;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+}
+.topbar-left  { display: flex; align-items: center; gap: 10px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.topbar-wordmark {
+  font-family: 'Michroma', sans-serif;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+
+.topbar-divider { width: 1px; height: 18px; background: var(--border-md); }
+
+.topbar-product {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.roche-chip {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(20,22,26,0.06);
+  border: 1px solid rgba(20,22,26,0.15);
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.topbar-date {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.btn-listen {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--info-dim); border: 1px solid var(--info);
+  border-radius: 5px; padding: 5px 10px;
+  font-family: 'Manrope', sans-serif; font-size: 10px; font-weight: 600;
+  color: var(--info); letter-spacing: 0.04em; cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-listen:hover { background: rgba(59,130,246,0.18); }
+.listen-dot { width: 5px; height: 5px; background: var(--info); border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+
+.btn-persona {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--subtle); border: 1px solid var(--border-md);
+  border-radius: 5px; padding: 5px 10px;
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  cursor: pointer; transition: border-color 0.15s, color 0.15s;
+}
+.btn-persona:hover { border-color: var(--text); color: var(--text); }
+.persona-dot {
+  width: 16px; height: 16px; background: var(--subtle);
+  border: 1px solid var(--border-md); border-radius: 50%;
+  font-size: 8px; color: var(--muted); font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── SIDEBAR TOGGLE ────────────────────────── */
+#sidebar-toggle {
+  position: fixed; left: 224px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 36px;
+  background: var(--card); border: 1px solid var(--border-md); border-left: none;
+  border-radius: 0 4px 4px 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--muted);
+  z-index: 200; transition: left 0.22s ease;
+}
+#shell.collapsed #sidebar-toggle { left: 0px; }
+
+/* ── SIDEBAR ───────────────────────────────── */
+#sidebar {
+  grid-area: sidebar;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; overflow-x: hidden;
+  transition: opacity 0.2s ease;
+}
+#shell.collapsed #sidebar { opacity: 0; pointer-events: none; }
+
+.sidebar-inner { padding: 12px 0; min-width: 236px; }
+
+.sidebar-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); padding: 0 12px 6px; margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.brief-card {
+  padding: 9px 12px; cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.13s; position: relative;
+}
+.brief-card:hover { background: var(--subtle); }
+.brief-card.active { border-left-color: var(--text); background: var(--offset); }
+.brief-card-title { font-size: 11px; font-weight: 500; color: rgba(20,22,26,0.65); line-height: 1.4; margin-bottom: 2px; }
+.brief-card.active .brief-card-title { color: var(--text); font-weight: 600; }
+.brief-card-meta { font-size: 9px; color: var(--muted); letter-spacing: 0.02em; font-family: 'IBM Plex Mono', monospace; }
+.new-dot { width: 5px; height: 5px; background: var(--red); border-radius: 50%; position: absolute; top: 9px; right: 10px; animation: pulse-dot 2.5s ease-in-out infinite; }
+
+.sidebar-rule { height: 1px; background: var(--border); margin: 10px 12px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 7px; padding: 7px 12px;
+  cursor: pointer; font-size: 11px; font-weight: 500;
+  color: rgba(20,22,26,0.5); transition: background 0.13s, color 0.13s;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--subtle); color: var(--text); }
+.nav-item.active { color: var(--text); background: var(--offset); font-weight: 600; }
+.nav-icon { font-size: 12px; width: 14px; text-align: center; opacity: 0.7; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+/* ── MAIN ──────────────────────────────────── */
+#main { grid-area: main; overflow-y: auto; background: var(--bg); }
+.view { display: none; }
+.view.active { display: block; }
+.brief-content { display: none; }
+.brief-content.active { display: block; }
+
+/* ── BRIEF VIEW ────────────────────────────── */
+#view-brief { max-width: 780px; margin: 0 auto; padding: 28px 36px 80px; }
+
+.brief-eyebrow { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+
+.tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.tag-outline { border: 1px solid var(--border-md); color: var(--muted); }
+.tag-ink     { background: var(--text); color: var(--bg); }
+.tag-urgent  { background: var(--red-dim); border: 1px solid rgba(220,74,65,0.3); color: var(--red); }
+.tag-caution { background: var(--amber-dim); border: 1px solid rgba(224,161,46,0.3); color: var(--amber); }
+.tag-new     { background: var(--green-dim); border: 1px solid rgba(63,165,106,0.3); color: var(--green); }
+.tag-info    { background: var(--info-dim); border: 1px solid rgba(59,130,246,0.3); color: var(--info); }
+.tag-emerging{ background: var(--emg-dim); border: 1px solid rgba(139,124,240,0.3); color: var(--emerging); }
+
+.eyebrow-date { margin-left: auto; font-size: 10px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+
+.brief-headline {
+  font-size: 24px; font-weight: 800; color: var(--text);
+  line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 14px;
+}
+.brief-headline em { font-style: normal; border-bottom: 2px solid var(--text); }
+
+.brief-lede {
+  font-size: 13px; font-weight: 400; color: var(--muted);
+  line-height: 1.85; max-width: 64ch; margin-bottom: 16px;
+}
+
+.brief-meta {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  margin-bottom: 22px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 2px; }
+.meta-label { font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.meta-value { font-size: 12px; font-weight: 700; color: var(--text); }
+.meta-value.warn { color: var(--amber); }
+.meta-value.dim  { color: var(--muted); font-weight: 400; }
+
+/* Situation room */
+.situation-room {
+  background: var(--card); border: 1px solid var(--border-md);
+  border-top: 2px solid var(--text);
+  border-radius: 8px; padding: 18px 20px; margin-bottom: 28px;
+}
+.situation-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text); margin-bottom: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.situation-body {
+  font-size: 13px; line-height: 1.8; color: var(--muted);
+}
+.situation-body strong { color: var(--text); font-weight: 700; }
+
+/* Sections */
+.section-rule { height: 1px; background: var(--border); margin: 28px 0; }
+
+.brief-section { opacity: 0; transform: translateY(8px); animation: fadeUp 0.35s ease forwards; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+.section-number { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.section-num {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.section-num::before { content: ''; display: inline-block; width: 16px; height: 1px; background: var(--muted); opacity: 0.4; }
+.section-cat { font-size: 9px; font-weight: 500; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'IBM Plex Mono', monospace; }
+
+.section-h2 {
+  font-size: 17px; font-weight: 700; color: var(--text);
+  line-height: 1.4; margin-bottom: 10px;
+}
+.section-h2 em { font-style: normal; border-bottom: 2px solid var(--text); }
+
+.pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
+.pill { font-size: 8px; font-weight: 700; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; border: 1px solid; font-family: 'IBM Plex Mono', monospace; }
+.pill-hot     { background: var(--amber-dim); border-color: rgba(224,161,46,0.35); color: var(--amber); }
+.pill-alert   { background: var(--red-dim);   border-color: rgba(220,74,65,0.35);  color: var(--red); }
+.pill-watch   { background: var(--info-dim);  border-color: rgba(59,130,246,0.35); color: var(--info); }
+.pill-new     { background: var(--green-dim); border-color: rgba(63,165,106,0.35); color: var(--green); }
+.pill-emg     { background: var(--emg-dim);   border-color: rgba(139,124,240,0.35);color: var(--emerging); }
+
+.section-body { font-size: 13px; line-height: 1.85; color: var(--muted); margin-bottom: 14px; }
+
+.pull-quote {
+  border-left: 2px solid var(--text); background: var(--card);
+  padding: 14px 16px; margin: 14px 0; border-radius: 0 6px 6px 0;
+}
+.pull-quote-text { font-size: 13px; font-style: italic; color: rgba(20,22,26,0.7); line-height: 1.75; margin-bottom: 8px; }
+.pull-quote-cite { font-size: 9px; color: var(--muted); letter-spacing: 0.03em; font-family: 'IBM Plex Mono', monospace; }
+
+.sources { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.source-chip {
+  font-size: 9px; border: 1px solid var(--border-md); border-radius: 3px;
+  padding: 3px 8px; color: var(--info); text-decoration: none;
+  transition: background 0.13s, border-color 0.13s;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.source-chip:hover { background: var(--info-dim); border-color: var(--info); }
+
+.fvq {
+  background: rgba(224,161,46,0.06); border-left: 2px solid var(--amber);
+  padding: 12px 14px; border-radius: 0 5px 5px 0; margin-top: 14px;
+}
+.fvq-label { font-size: 8px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber); margin-bottom: 6px; font-family: 'IBM Plex Mono', monospace; }
+.fvq-text  { font-size: 12px; font-style: italic; color: var(--muted); line-height: 1.65; }
+
+/* KOL grid */
+.kol-intro { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+.kol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.kol-card { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 14px; }
+.kol-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.kol-avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+}
+.av-ink   { background: rgba(20,22,26,0.08); border: 1px solid rgba(20,22,26,0.15); color: var(--text); }
+.av-green { background: var(--green-dim); border: 1px solid var(--green); color: var(--green); }
+.av-amber { background: var(--amber-dim); border: 1px solid var(--amber); color: var(--amber); }
+.av-red   { background: var(--red-dim);   border: 1px solid var(--red);   color: var(--red); }
+.av-emg   { background: var(--emg-dim);   border: 1px solid var(--emerging); color: var(--emerging); }
+.kol-name  { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.kol-title { font-size: 10px; color: var(--muted); line-height: 1.4; margin-bottom: 4px; }
+.kol-platforms { display: flex; gap: 3px; flex-wrap: wrap; }
+.kol-platform { font-size: 8px; border: 1px solid var(--border-md); border-radius: 2px; padding: 1px 5px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.kol-body { font-size: 11px; color: var(--muted); line-height: 1.65; margin-bottom: 9px; }
+.kol-narrative { display: flex; align-items: center; gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.kol-narrative-label { font-size: 8px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.kol-narrative-value { font-size: 9px; color: var(--muted); }
+.kol-ripple { margin-left: auto; font-size: 9px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+.ripple-h  { color: var(--info); }
+.ripple-vh { color: var(--green); }
+.ripple-hi { color: var(--amber); }
+.ripple-alert { color: var(--red); }
+
+/* Bottom line */
+.bottom-line {
+  background: var(--card); border: 1px solid var(--border-md);
+  border-left: 3px solid var(--text);
+  border-radius: 0 8px 8px 0; padding: 18px 22px; margin-top: 28px;
+}
+.bottom-line-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.bottom-line-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+.bottom-line-items { display: flex; flex-direction: column; gap: 12px; }
+.bottom-line-item { display: flex; gap: 12px; }
+.bl-num { font-size: 12px; font-weight: 700; color: var(--text); flex-shrink: 0; min-width: 22px; font-family: 'IBM Plex Mono', monospace; }
+.bl-text { font-size: 13px; color: var(--muted); line-height: 1.75; }
+
+/* Footer */
+.brief-footer {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 20px 0 0; border-top: 1px solid var(--border); margin-top: 28px;
+  flex-wrap: wrap; gap: 10px;
+}
+.footer-sources { font-size: 9px; color: var(--muted); line-height: 1.6; font-family: 'IBM Plex Mono', monospace; }
+.footer-disc { font-size: 8px; color: rgba(90,94,98,0.6); text-align: right; max-width: 260px; line-height: 1.5; }
+
+/* Competitive matrix */
+.comp-matrix { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.comp-matrix thead tr { background: var(--offset); }
+.comp-matrix thead th { color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border-md); font-family: 'IBM Plex Mono', monospace; }
+.comp-matrix tbody tr { border-bottom: 1px solid var(--border); }
+.comp-matrix tbody tr:last-child { border-bottom: none; }
+.comp-matrix tbody tr:nth-child(even) { background: var(--subtle); }
+.comp-matrix tbody tr.hl { background: var(--info-dim) !important; }
+.comp-matrix td { padding: 10px 14px; color: var(--muted); }
+.comp-matrix td:first-child { font-weight: 700; color: var(--text); }
+.chk { color: var(--green); font-weight: 700; }
+.crs { color: rgba(20,22,26,0.2); }
+
+/* ── SIGNAL VELOCITY VIEW ──────────────────── */
+#view-velocity { padding: 28px 32px 80px; max-width: 900px; margin: 0 auto; }
+
+.vel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.vel-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.vel-subtitle { font-size: 12px; color: var(--muted); }
+
+.vel-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+.vel-stat { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 14px 16px; }
+.vel-stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-family: 'IBM Plex Mono', monospace; }
+.vel-stat-value { font-size: 22px; font-weight: 800; color: var(--text); }
+.vel-stat-value.green  { color: var(--green); }
+.vel-stat-value.amber  { color: var(--amber); }
+.vel-stat-value.red    { color: var(--red); }
+
+.vel-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.vel-table thead tr { background: var(--offset); }
+.vel-table thead th { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border-md); font-family: 'IBM Plex Mono', monospace; }
+.vel-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
+.vel-table tbody tr:last-child { border-bottom: none; }
+.vel-table tbody tr:hover { background: var(--subtle); }
+.vel-table td { padding: 12px 14px; vertical-align: middle; }
+
+.vel-signal-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.vel-signal-cat  { font-size: 9px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.vel-mentions { font-size: 13px; font-weight: 700; color: var(--text); }
+.vel-mentions-sub { font-size: 9px; color: var(--muted); margin-top: 1px; font-family: 'IBM Plex Mono', monospace; }
+
+.vel-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.vel-bar-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; min-width: 80px; }
+.vel-bar-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+.vel-bar-fill.ink    { background: var(--text); }
+.vel-bar-fill.green  { background: var(--green); }
+.vel-bar-fill.amber  { background: var(--amber); }
+.vel-bar-fill.red    { background: var(--red); }
+.vel-bar-fill.info   { background: var(--info); }
+.vel-bar-pct { font-size: 11px; font-weight: 700; min-width: 46px; text-align: right; font-family: 'IBM Plex Mono', monospace; }
+.vel-bar-pct.ink    { color: var(--text); }
+.vel-bar-pct.green  { color: var(--green); }
+.vel-bar-pct.amber  { color: var(--amber); }
+.vel-bar-pct.red    { color: var(--red); }
+.vel-bar-pct.info   { color: var(--info); }
+
+.vel-vel { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.vel-vel-val { font-size: 13px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+.vel-vel-lbl { font-size: 9px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+.vel-acc  { color: var(--green); }
+.vel-hot  { color: var(--red); }
+.vel-warm { color: var(--amber); }
+.vel-cool { color: var(--muted); }
+
+/* ── NARRATIVE MAP VIEW ────────────────────── */
+#view-narrative { padding: 28px 32px 80px; max-width: 900px; margin: 0 auto; }
+
+.narr-header { margin-bottom: 24px; }
+.narr-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.narr-subtitle { font-size: 12px; color: var(--muted); }
+
+.narr-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.narr-map-container {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px; margin-bottom: 24px; overflow: hidden;
+}
+.narr-svg-wrap { width: 100%; overflow: visible; }
+
+.narr-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.narr-card { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 14px; }
+.narr-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.narr-card-name { font-size: 11px; font-weight: 700; color: var(--text); }
+.narr-badge { font-size: 8px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 6px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; }
+.nb-acc   { background: var(--green-dim); color: var(--green); }
+.nb-build { background: var(--info-dim);  color: var(--info); }
+.nb-watch { background: var(--amber-dim); color: var(--amber); }
+.nb-risk  { background: var(--red-dim);   color: var(--red); }
+.narr-card-body { font-size: 11px; color: var(--muted); line-height: 1.65; margin-bottom: 8px; }
+.narr-card-driver { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; font-family: 'IBM Plex Mono', monospace; }
+.narr-card-driver-val { font-size: 10px; color: var(--text); }
+
+/* ── OVERLAY ───────────────────────────────── */
+#overlay { position: fixed; inset: 0; background: rgba(20,22,26,0.35); z-index: 1000; display: none; align-items: center; justify-content: center; }
+#overlay.open { display: flex; }
+.overlay-panel {
+  background: var(--card); border: 1px solid var(--border-md);
+  border-top: 2px solid var(--text);
+  border-radius: 8px; padding: 24px 28px; max-width: 460px; width: 90%;
+  box-shadow: 0 24px 64px rgba(20,22,26,0.15);
+}
+.overlay-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 10px; font-family: 'IBM Plex Mono', monospace; }
+.overlay-heading { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.overlay-subtext { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.overlay-prompt  { font-size: 13px; font-style: italic; color: var(--muted); margin-bottom: 10px; }
+.overlay-textarea {
+  width: 100%; height: 90px; border: 1px solid var(--border-md); border-radius: 5px;
+  padding: 10px 12px; font-family: 'Manrope', sans-serif; font-size: 12px;
+  color: var(--text); background: var(--bg); resize: none; outline: none; margin-bottom: 14px;
+}
+.overlay-textarea:focus { border-color: var(--text); }
+.overlay-textarea::placeholder { color: var(--muted); }
+.overlay-buttons { display: flex; gap: 8px; margin-bottom: 10px; }
+.btn-skip { background: none; border: 1px solid var(--border-md); border-radius: 5px; padding: 8px 16px; font-size: 12px; color: var(--muted); cursor: pointer; font-family: 'Manrope', sans-serif; }
+.btn-skip:hover { border-color: var(--text); color: var(--text); }
+.btn-save { background: var(--text); border: none; border-radius: 5px; padding: 8px 16px; font-size: 12px; color: var(--bg); cursor: pointer; font-weight: 700; font-family: 'Manrope', sans-serif; }
+.btn-save:hover { opacity: 0.88; }
+.overlay-note { font-size: 9px; color: rgba(90,94,98,0.6); line-height: 1.5; }
+
+/* ── RESPONSIVE ────────────────────────────── */
+@media (max-width: 700px) {
+  #shell { grid-template-columns: 0px 1fr; }
+  #sidebar-toggle { display: none; }
+  #view-brief, #view-velocity, #view-narrative { padding: 18px 16px 60px; }
+  .kol-grid, .narr-cards { grid-template-columns: 1fr; }
+  .vel-stats { grid-template-columns: 1fr 1fr; }
+  .brief-headline { font-size: 19px; }
+}
+</style>
+</head>
+<body>
+<div id="shell">
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <div class="topbar-left">
+    <a style="display:flex;align-items:center;gap:8px;text-decoration:none" href="#">
+      <svg width="20" height="20" viewBox="0 0 100 90" fill="none">
+        <path d="M52 8 C60 22,74 36,78 54 C81 66,74 78,65 74 C56 70,54 58,48 48 C42 38,32 34,24 38 C16 42,15 56,22 66 C29 76,46 80,52 68" stroke="#14161A" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <circle cx="74" cy="22" r="10" fill="#14161A" opacity="0.4"/>
+      </svg>
+      <span class="topbar-wordmark">AURIVIAN · PULSE</span>
+    </a>
+    <div class="topbar-divider"></div>
+    <span class="roche-chip">Roche</span>
+    <span class="topbar-product" style="font-size:9px">Oncology · Haematology</span>
+    <span class="topbar-date">Mon, June 9 2026</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-persona" onclick="openPersona()">
+      <div class="persona-dot">?</div>Personalize
+    </button>
+  </div>
+</header>
+
+<!-- SIDEBAR TOGGLE -->
+<button id="sidebar-toggle" onclick="toggleSidebar()">&#8249;</button>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-section-label">ASCO 2026</div>
+    <div class="brief-card active" onclick="switchBrief(this, 'destiny')">
+      <div class="new-dot"></div>
+      <div class="brief-card-title">DESTINY-Breast06 Competitive Response</div>
+      <div class="brief-card-meta">Jun 9 · 4 signals</div>
+    </div>
+    <div class="brief-card" onclick="switchBrief(this, 'scinertia')">
+      <div class="brief-card-title">Phesgo SC Inertia — 4× Recurring</div>
+      <div class="brief-card-meta">Jun 8 · 3 signals</div>
+    </div>
+    <div class="brief-card" onclick="switchBrief(this, 'polivy')">
+      <div class="brief-card-title">Polivy vs Tafasitamab at ASCO</div>
+      <div class="brief-card-meta">Jun 7 · Morschhauser alert</div>
+    </div>
+    <div class="sidebar-rule"></div>
+    <div class="sidebar-section-label">Portfolio</div>
+    <div class="brief-card" onclick="switchBrief(this, 'hemlibra')">
+      <div class="brief-card-title">Hemlibra Pediatric Evidence — MO5 Gap</div>
+      <div class="brief-card-meta">Jun 6 · EHA 2026 pre-read</div>
+    </div>
+    <div class="brief-card" onclick="switchBrief(this, 'vabysmo')">
+      <div class="brief-card-title">Vabysmo Bispecific Education</div>
+      <div class="brief-card-meta">Jun 5 · 2 signals</div>
+    </div>
+    <div class="brief-card" onclick="switchBrief(this, 'biosimilar')">
+      <div class="brief-card-title">Trastuzumab Biosimilar Differentiation</div>
+      <div class="brief-card-meta">May 28</div>
+    </div>
+    <div class="sidebar-rule"></div>
+    <div class="sidebar-section-label">Intelligence</div>
+    <div class="nav-item active" id="nav-brief" onclick="showView('brief', this)"><span class="nav-icon">&#8801;</span> Morning Brief</div>
+    <div class="nav-item" id="nav-velocity" onclick="showView('velocity', this)"><span class="nav-icon">&#8725;</span> Signal Velocity</div>
+    <div class="nav-item" id="nav-narrative" onclick="showView('narrative', this)"><span class="nav-icon">&#9678;</span> Narrative Map</div>
+    <div class="sidebar-rule"></div>
+    <div class="sidebar-section-label">Platform</div>
+    <a class="nav-item" href="https://aurivian-roche-demo.vercel.app" target="_blank" rel="noopener noreferrer"><span class="nav-icon">&#9675;</span> Link to Aurivian</a>
+    <a class="nav-item" href="https://aurivian-roche-capture-app.vercel.app" target="_blank" rel="noopener noreferrer"><span class="nav-icon">&#10022;</span> ASCO Capture App</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- ══ VIEW: MORNING BRIEF ══════════════════ -->
+  <div id="view-brief" class="view active">
+
+  <!-- ─ Brief 1: DESTINY-Breast06 (active) ─ -->
+  <div id="brief-destiny" class="brief-content active" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-urgent">Competitive Alert</span>
+      <span class="tag" style="background:var(--info-dim);border:1px solid rgba(59,130,246,0.3);color:var(--info)">Phesgo · HER2+ BC</span>
+      <span class="eyebrow-date">June 9, 2026 &middot; 6:30 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      DESTINY-Breast06 is the <em>most-discussed competitive data</em> at ASCO 2026.
+      HER2-low is being redefined — and Phesgo's pertuzumab backbone is the response.
+    </h1>
+
+    <p class="brief-lede">T-DXd's HER2-ultralow data at ASCO 2026 has created urgency in every HER2+ conversation. Four signals this week confirm that the sequencing question — when to use T-DXd versus maintaining Phesgo in the neoadjuvant/adjuvant setting — is the central clinical debate. Phesgo's pertuzumab + trastuzumab backbone retains superiority in the curative setting. The brief articulates that narrative for field teams ahead of this week's key sessions.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">Product Focus</span><span class="meta-value">Phesgo (perjeta + herceptin)</span></div>
+      <div class="meta-item"><span class="meta-label">Indication</span><span class="meta-value dim">HER2+ early BC · HER2+ mBC</span></div>
+      <div class="meta-item"><span class="meta-label">Priority</span><span class="meta-value warn">&#9679; High · 4 Signals</span></div>
+      <div class="meta-item"><span class="meta-label">Meeting</span><span class="meta-value dim">ASCO 2026 · Chicago · Day 3</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; 4 Active Signals</div>
+      <p class="situation-body"><strong>The strategic picture this week:</strong> T-DXd's DESTINY-Breast06 data (HER2-ultralow, <em>n</em>=866) is the headline of ASCO 2026, generating the highest social signal velocity of any ASCO abstract this year. The data expands T-DXd's label into IHC 0 patients — territory that was previously uncontested. This does not threaten Phesgo's curative-intent position, but it creates confusion in community oncology settings where sequencing guidelines haven't been updated. <strong>The field team needs a clear, defensible sequencing message: Phesgo in neoadjuvant/early, T-DXd in the relapsed/refractory setting.</strong> Cortés, Hurvitz, and Harbeck are the three KOLs with the highest reach who have commented publicly on sequencing this week.</p>
+    </div>
+
+    <!-- S01 -->
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Competitive · Clinical Signal</span></div>
+      <h2 class="section-h2">DESTINY-Breast06 HER2-ultralow data expands T-DXd's label. <em>Phesgo's curative-setting backbone is structurally different — not competitive.</em></h2>
+      <div class="pills"><span class="pill pill-alert">&#8593; High Velocity</span><span class="pill pill-watch">Competitive Monitor</span></div>
+      <p class="section-body">DESTINY-Breast06 (ASCO 2026, LBA1001) reported PFS benefit for T-DXd in HER2-ultralow HR+/HER2− mBC (median PFS 13.2 vs 8.1 mo, HR 0.62). This extends T-DXd's reach into patients previously defined as HER2-negative by IHC. The key distinction for field teams: this population is metastatic and HR+. Phesgo's primary evidence base is <em>neoadjuvant/adjuvant HER2-positive early BC</em> — a structurally separate population. The two agents are not competing for the same first-line patient in the curative setting; the competitive risk is narrative confusion, not outcomes data.</p>
+      <div class="pull-quote">
+        <p class="pull-quote-text">"DESTINY-Breast06 is extraordinary data — but we need to be careful about the messaging. HER2-ultralow is a distinct population. For our HER2-positive early-stage patients, pertuzumab + trastuzumab remains the standard of care with the longest adjuvant follow-up data."</p>
+        <span class="pull-quote-cite">— Sara Hurvitz, MD · ASCO 2026 Press Briefing · June 1, 2026</span>
+      </div>
+      <div class="sources">
+        <a class="source-chip" href="#" onclick="return false">DESTINY-Breast06 LBA1001</a>
+        <a class="source-chip" href="#" onclick="return false">NEJM Evidence preview</a>
+        <a class="source-chip" href="#" onclick="return false">OncLive ASCO Day 3</a>
+      </div>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">In your territory, are community oncologists asking about switching HER2+ early-stage patients from Phesgo to T-DXd based on the DESTINY-Breast06 data? What framing resolves their concern most effectively?</p>
+      </div>
+    </div>
+
+    <div class="section-rule"></div>
+
+    <!-- S02 -->
+    <div class="brief-section" style="animation-delay:0.10s">
+      <div class="section-number"><span class="section-num">02</span><span class="section-cat">KOL Signal · Congress</span></div>
+      <h2 class="section-h2">Javier Cortés has proposed a co-publication on sequencing with the Roche Medical team. <em>This is a high-value engagement opportunity.</em></h2>
+      <div class="pills"><span class="pill pill-new">New Opportunity</span></div>
+      <p class="section-body">In a sidebar conversation at the Roche ASCO satellite event (Day 2, June 2), Javier Cortés (IOB, Barcelona) raised interest in co-authoring a sequencing framework paper integrating DESTINY-Breast06, APHINITY, and PHERGain data. Cortés has a 94% social reach score and is the 4th most-cited HER2 KOL at ASCO 2026. This is the highest-value unsolicited collaboration request at the congress. Medical Affairs should assess feasibility and conflict-of-interest landscape before responding.</p>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">Has the MSL team followed up with Cortés since Day 2? Does a sequencing framework paper align with current Medical strategy — or is a different publication format (review, guidelines commentary) more appropriate?</p>
+      </div>
+    </div>
+
+    <div class="section-rule"></div>
+
+    <!-- S03 -->
+    <div class="brief-section" style="animation-delay:0.15s">
+      <div class="section-number"><span class="section-num">03</span><span class="section-cat">KOL Monitor · Attention Required</span></div>
+      <h2 class="section-h2">Key ASCO voices this week on HER2 sequencing.</h2>
+      <div class="kol-intro">Three KOLs with the highest ASCO 2026 reach have made public statements relevant to Phesgo's sequencing position. Monitor and engage appropriately.</div>
+      <div class="kol-grid">
+        <div class="kol-card">
+          <div class="kol-header">
+            <div class="kol-avatar av-green">SH</div>
+            <div>
+              <div class="kol-name">Sara Hurvitz</div>
+              <div class="kol-title">Director, Breast Oncology Research · USC Norris<br>Former SWOG Breast Committee Chair</div>
+              <div class="kol-platforms"><span class="kol-platform">Twitter/X</span><span class="kol-platform">Medscape</span><span class="kol-platform">ASCO Daily</span></div>
+            </div>
+          </div>
+          <p class="kol-body">Provided the clearest public framing of Phesgo vs T-DXd sequencing at ASCO press briefing. Her "structurally different population" framing is field-usable now. Influence score 9.2.</p>
+          <div class="kol-narrative">
+            <span class="kol-narrative-label">Narrative</span>
+            <span class="kol-narrative-value">Maintains Phesgo neoadjuvant standard — not shifting</span>
+            <span class="kol-ripple ripple-vh">&#9679; Aligned</span>
+          </div>
+        </div>
+        <div class="kol-card">
+          <div class="kol-header">
+            <div class="kol-avatar av-green">JC</div>
+            <div>
+              <div class="kol-name">Javier Cortés</div>
+              <div class="kol-title">Director, IOB Institute of Oncology · Barcelona</div>
+              <div class="kol-platforms"><span class="kol-platform">Twitter/X</span><span class="kol-platform">ESMO</span><span class="kol-platform">OncLive</span></div>
+            </div>
+          </div>
+          <p class="kol-body">Proposed co-publication (see Section 02). Publicly supportive of pertuzumab backbone in curative intent. Highest Twitter reach at ASCO 2026 among HER2 KOLs. Influence score 9.4.</p>
+          <div class="kol-narrative">
+            <span class="kol-narrative-label">Narrative</span>
+            <span class="kol-narrative-value">Strongly aligned — co-pub opportunity pending</span>
+            <span class="kol-ripple ripple-vh">&#9679; High Value</span>
+          </div>
+        </div>
+        <div class="kol-card">
+          <div class="kol-header">
+            <div class="kol-avatar av-ink">NH</div>
+            <div>
+              <div class="kol-name">Nadia Harbeck</div>
+              <div class="kol-title">Director, Breast Center · LMU Munich</div>
+              <div class="kol-platforms"><span class="kol-platform">AGO</span><span class="kol-platform">Twitter/X</span></div>
+            </div>
+          </div>
+          <p class="kol-body">ASCO panel discussant for neoadjuvant session. Publicly nuanced — acknowledged T-DXd's data quality while defending guideline-based Phesgo use. Influence score 8.9.</p>
+          <div class="kol-narrative">
+            <span class="kol-narrative-label">Narrative</span>
+            <span class="kol-narrative-value">Balanced — guideline-anchored, not shifting</span>
+            <span class="kol-ripple ripple-h">&#9679; Stable</span>
+          </div>
+        </div>
+        <div class="kol-card">
+          <div class="kol-header">
+            <div class="kol-avatar av-amber">SL</div>
+            <div>
+              <div class="kol-name">Sherene Loi</div>
+              <div class="kol-title">Head, Translational Breast Cancer Genomics · Peter MacCallum</div>
+              <div class="kol-platforms"><span class="kol-platform">Twitter/X</span><span class="kol-platform">JCO</span></div>
+            </div>
+          </div>
+          <p class="kol-body">Raising questions on biomarker overlap between HER2-ultralow and HER2-positive populations. Watch for potential ambiguity in public comments that could be cited out of context. Influence score 8.7.</p>
+          <div class="kol-narrative">
+            <span class="kol-narrative-label">Narrative</span>
+            <span class="kol-narrative-value">Monitor — raising biomarker complexity questions</span>
+            <span class="kol-ripple ripple-hi">&#9679; Monitor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-rule"></div>
+
+    <!-- Bottom Line -->
+    <div class="brief-section" style="animation-delay:0.20s">
+      <div class="bottom-line">
+        <div class="bottom-line-header">
+          <span class="bottom-line-label">&#9654; Bottom Line · 3 Actions for This Week</span>
+        </div>
+        <div class="bottom-line-items">
+          <div class="bottom-line-item">
+            <span class="bl-num">01</span>
+            <p class="bl-text"><strong>Deploy the sequencing one-pager</strong> to field teams by June 10. Hurvitz's public framing is field-validated — use it verbatim in the leave-behind. Focus message: Phesgo curative-intent/early, T-DXd relapsed/refractory. Do not overstate competitive threat.</p>
+          </div>
+          <div class="bottom-line-item">
+            <span class="bl-num">02</span>
+            <p class="bl-text"><strong>Respond to Cortés co-publication inquiry within 72 hours.</strong> MSL team to schedule a structured conversation by June 12. Identify feasibility and preferred publication vehicle before the meeting with Ross and Natasha on Friday.</p>
+          </div>
+          <div class="bottom-line-item">
+            <span class="bl-num">03</span>
+            <p class="bl-text"><strong>Monitor Sherene Loi's commentary through June 10.</strong> Her biomarker complexity framing is not currently a threat, but if it gains KOL traction it could generate confusion about patient selection criteria that requires a proactive response from Medical.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources">
+        <strong>Primary sources:</strong> DESTINY-Breast06 LBA1001 (ASCO 2026) · Hurvitz ASCO Press Briefing · APHINITY 8yr follow-up · PHERGain ASCO 2026 update
+      </div>
+      <div class="footer-disc">Generated by Aurivian Medical Intelligence. For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-destiny -->
+
+  <!-- ─ Brief 2: SC Inertia ─ -->
+  <div id="brief-scinertia" class="brief-content" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-caution">Recurring Signal ×4</span>
+      <span class="tag" style="background:var(--info-dim);border:1px solid rgba(59,130,246,0.3);color:var(--info)">Phesgo SC</span>
+      <span class="eyebrow-date">June 8, 2026 &middot; 7:10 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      The SC inertia pattern is now confirmed in <em>four independent territories.</em>
+      Nurse workflow resistance — not clinical doubt — is the barrier.
+    </h1>
+
+    <p class="brief-lede">The same insight has surfaced independently from MSLs in Chicago, Houston, Madrid, and Singapore over the past 6 weeks: oncology nurses in high-volume infusion centers are actively discouraging SC conversion because the IV protocol is "what we know." This is not a clinical objection to Phesgo's SC formulation — it is a workflow-change resistance issue. The implication: the current nurse-facing materials are not solving the real problem.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">Product Focus</span><span class="meta-value">Phesgo SC (subcutaneous)</span></div>
+      <div class="meta-item"><span class="meta-label">Signal Type</span><span class="meta-value warn">&#9679; Recurring · 4× Independent</span></div>
+      <div class="meta-item"><span class="meta-label">MO Impact</span><span class="meta-value dim">MO1 — SC Adoption</span></div>
+      <div class="meta-item"><span class="meta-label">Action Owner</span><span class="meta-value dim">MSL + Nurse Education</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; Cross-Territory Pattern</div>
+      <p class="situation-body"><strong>Why this matters now:</strong> The SC inertia signal has passed the threshold from individual territory observation to systemic pattern. Four geographically independent reports with the same mechanism (nurse workflow resistance, not clinical doubt) indicate a materials gap, not a field execution gap. The existing SC quick-reference card (A1, Started) addresses dosing and administration but does not address nurse concern about disrupting established chair routines. A targeted nurse-facing resource addressing workflow change management would directly unblock this barrier — and represents a low-cost, high-impact intervention before ASCO closes.</p>
+    </div>
+
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Field Pattern · Cross-Territory</span></div>
+      <h2 class="section-h2">Four territories, same barrier. <em>Nurse workflow resistance is driving IV retention — not clinical preference for IV dosing.</em></h2>
+      <div class="pills"><span class="pill pill-hot">&#8593; Pattern Confirmed</span><span class="pill pill-alert">MO1 Gap Risk</span></div>
+      <p class="section-body">MSL field reports from Chicago, Houston, Madrid, and Singapore (May–June 2026) independently document the same pattern: infusion nurses at academic medical centers and high-volume community practices express preference for retaining IV Phesgo because "we have a reliable process for the IV protocol." In two cases, nurses actively advised patients that IV was "more standard." None of the reports cite clinical outcomes concerns with SC — the objection is entirely workflow-based. This is a solvable problem with the right nurse-facing tool.</p>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">Does your center have a dedicated IV-to-SC workflow change protocol? If a one-page nurse checklist for the first SC administration visit was available, would it reduce the resistance you are observing?</p>
+      </div>
+    </div>
+
+    <div class="bottom-line" style="margin-top:28px">
+      <div class="bottom-line-header">
+        <span class="bottom-line-label">&#9654; Bottom Line · 2 Actions</span>
+      </div>
+      <div class="bottom-line-items">
+        <div class="bottom-line-item">
+          <span class="bl-num">01</span>
+          <p class="bl-text"><strong>Expand A1 (SC quick-reference card) to include a nurse workflow change checklist.</strong> The current card addresses dosing; the missing piece is a "first SC visit" protocol that gives nurses a structured transition. Prioritize before ASCO closes.</p>
+        </div>
+        <div class="bottom-line-item">
+          <span class="bl-num">02</span>
+          <p class="bl-text"><strong>Flag to Nurse Education lead.</strong> This pattern may warrant a targeted nurse advisory board call to design the workflow transition tool co-creatively — giving nurses authorship over the solution, which is more likely to drive adoption than a company-designed checklist.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources"><strong>Sources:</strong> MSL field reports (Chicago, Houston, Madrid, Singapore) · May–June 2026 · Capture App insights #AI1 ×4</div>
+      <div class="footer-disc">For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-scinertia -->
+
+  <!-- ─ Brief 3: Polivy ─ -->
+  <div id="brief-polivy" class="brief-content" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-urgent">KOL Divergence Alert</span>
+      <span class="tag" style="background:var(--emg-dim);border:1px solid rgba(139,124,240,0.3);color:var(--emerging)">Polivy · DLBCL/FL</span>
+      <span class="eyebrow-date">June 7, 2026 &middot; 8:00 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      Franck Morschhauser has endorsed tafasitamab-based regimens publicly at ASCO.
+      <em>Alignment score has declined from 73 → 61 in 60 days.</em>
+    </h1>
+
+    <p class="brief-lede">Morschhauser, one of Europe's most-cited lymphoma KOLs, publicly presented tafasitamab + lenalidomide data as a "compelling option" in relapsed/refractory DLBCL at the ASCO 2026 lymphoma oral session. His alignment with Polivy's positioning has measurably declined over the past 60 days. This is not yet a crisis — but the trajectory is clear, and the window for re-engagement is narrowing.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">KOL</span><span class="meta-value">Franck Morschhauser</span></div>
+      <div class="meta-item"><span class="meta-label">Alignment Score</span><span class="meta-value warn">&#8595; 73 → 61 (60 days)</span></div>
+      <div class="meta-item"><span class="meta-label">Product</span><span class="meta-value dim">Polivy (polatuzumab vedotin)</span></div>
+      <div class="meta-item"><span class="meta-label">Action Owner</span><span class="meta-value dim">MSL Europe · Hugo T</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; Divergence KOL Alert</div>
+      <p class="situation-body"><strong>Why this matters:</strong> Morschhauser has co-authored two Polivy publications (POLARIX, FL extension) and has been a consistent advocate. His shift toward tafasitamab endorsements — while not a repudiation of Polivy — signals that he is diversifying his advocacy portfolio in DLBCL. If this trajectory continues through ESMO 2026, his POLARIX authorship may no longer translate to active advocacy. <strong>The re-engagement window is approximately 8 weeks.</strong> MSL Hugo T last engaged in March 2026. A structured Medical engagement should be scheduled before ESMO abstract submission deadline (July 2026).</p>
+    </div>
+
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Competitive · tafasitamab</span></div>
+      <h2 class="section-h2">Tafasitamab + lenalidomide gaining traction in DLBCL community practice. <em>Polivy's POLARIX data answers this — but only if it is actively cited.</em></h2>
+      <div class="pills"><span class="pill pill-alert">Divergence Alert</span><span class="pill pill-hot">&#8595; Velocity Declining</span></div>
+      <p class="section-body">L-MIND and the recent DLBCL real-world data have given tafasitamab + lenalidomide a strong profile in the 2L+ setting among patients ineligible for CAR-T. POLARIX remains the Polivy trial with the most robust overall survival signal in first-line DLBCL. The counter-narrative is available and evidence-based — but it requires active MSL deployment, not passive availability. Salles's updated POLARIX FL analysis (presented at ASCO 2026 oral session) also provides a new differentiation anchor for indolent lymphoma.</p>
+      <div class="pull-quote">
+        <p class="pull-quote-text">"The POLARIX data remains the strongest first-line OS signal we have in high-risk DLBCL. The question is not whether polatuzumab works — it is whether the field is consistently hearing that message at the right moments."</p>
+        <span class="pull-quote-cite">— Gilles Salles, MD · ASCO 2026 Oral Session · June 3, 2026</span>
+      </div>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">In your engagements with European lymphoma KOLs this week, is the POLARIX OS signal being cited as a differentiator — or is the discussion defaulting to mechanism-of-action comparisons where tafasitamab has equivalent simplicity?</p>
+      </div>
+    </div>
+
+    <div class="bottom-line" style="margin-top:28px">
+      <div class="bottom-line-header">
+        <span class="bottom-line-label">&#9654; Bottom Line · 2 Actions</span>
+      </div>
+      <div class="bottom-line-items">
+        <div class="bottom-line-item">
+          <span class="bl-num">01</span>
+          <p class="bl-text"><strong>Schedule Hugo T re-engagement with Morschhauser before July 1.</strong> Frame around the POLARIX FL update presented at ASCO 2026 — new data creates a natural touchpoint. Objective is to understand his current clinical framing, not to challenge his tafasitamab endorsements directly.</p>
+        </div>
+        <div class="bottom-line-item">
+          <span class="bl-num">02</span>
+          <p class="bl-text"><strong>Deploy POLARIX vs L-MIND differentiation brief (A3) to European field team</strong> before ESMO 2026. Morschhauser's trajectory suggests this is a broader pattern in European lymphoma practice that requires proactive counter-messaging now.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources"><strong>Sources:</strong> ASCO 2026 Lymphoma Oral Session (Morschhauser, Salles) · POLARIX 4yr follow-up · L-MIND real-world data · LUCA alignment signal tracking</div>
+      <div class="footer-disc">For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-polivy -->
+
+  <!-- ─ Brief 4: Hemlibra ─ -->
+  <div id="brief-hemlibra" class="brief-content" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-urgent">MO5 Gap Status</span>
+      <span class="tag tag-emerging">Hemlibra · Pediatric</span>
+      <span class="eyebrow-date">June 6, 2026 &middot; 7:45 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      Hemlibra pediatric long-term evidence is the single largest gap in the portfolio.
+      <em>EHA 2026 pre-read: three abstracts that change this narrative.</em>
+    </h1>
+
+    <p class="brief-lede">MO5 — Hemlibra pediatric evidence dissemination — is currently classified as Gap. The gap is real: long-term follow-up data for emicizumab in children under 6 is limited relative to adult evidence, and haematologists are citing this gap when discussing transition-to-prophylaxis decisions in inhibitor patients. EHA 2026 (June 12–15) has three pediatric emicizumab abstracts that directly address this gap. The pre-read brief outlines what to expect and how field teams should frame the data.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">Product Focus</span><span class="meta-value">Hemlibra (emicizumab)</span></div>
+      <div class="meta-item"><span class="meta-label">MO Status</span><span class="meta-value warn">&#9679; MO5 — Gap</span></div>
+      <div class="meta-item"><span class="meta-label">Congress</span><span class="meta-value dim">EHA 2026 · June 12–15</span></div>
+      <div class="meta-item"><span class="meta-label">Action</span><span class="meta-value dim">A6 · Pediatric evidence package</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; MO5 Gap</div>
+      <p class="situation-body"><strong>The gap and the path to close it:</strong> Haematologists treating pediatric hemophilia A patients with inhibitors are the most evidence-hungry segment in the portfolio — they are making irreversible treatment decisions (prophylaxis initiation in year 1–2 of life) and they need long-term safety data. The current gap is specifically around &lt;6 year follow-up data and bleed rate consistency in very young patients with inhibitors. EHA 2026 abstracts from the HAVEN pediatric extension and the HOHOEMI long-term follow-up study will provide the first public presentation of 5-year data in this population. <strong>This is the most important Medical Affairs evidence dissemination opportunity in the portfolio this month.</strong></p>
+    </div>
+
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Evidence Pre-read · EHA 2026</span></div>
+      <h2 class="section-h2">Three EHA 2026 abstracts that close the pediatric evidence gap. <em>Field teams need the framing before June 12.</em></h2>
+      <div class="pills"><span class="pill pill-new">Evidence Update</span><span class="pill pill-emg">EHA 2026 Pre-read</span></div>
+      <p class="section-body">Abstract EP1247 (HAVEN pediatric extension, 5yr follow-up, <em>n</em>=56 under age 6) presents bleed rate data at year 5. Abstract S240 (HOHOEMI long-term, Japan/EU cohort, <em>n</em>=22 infants) presents safety data through 4 years in very young patients. Abstract PB2387 (real-world registry, 12 European centers) provides the first registry-based long-term safety signal in pediatric inhibitor patients. Together these three abstracts provide the first comprehensive pediatric long-term evidence set for emicizumab. Guy Young and Flora Peyvandi — both high-reach KOLs — are presenting at EHA. Pre-brief field teams with the key claims before the sessions.</p>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">When you discuss emicizumab with haematologists treating pediatric inhibitor patients, what is the most frequently cited evidence gap? Is it long-term bleed rate, safety signal duration, or quality of life outcomes for families?</p>
+      </div>
+    </div>
+
+    <div class="bottom-line" style="margin-top:28px">
+      <div class="bottom-line-header">
+        <span class="bottom-line-label">&#9654; Bottom Line · 2 Actions</span>
+      </div>
+      <div class="bottom-line-items">
+        <div class="bottom-line-item">
+          <span class="bl-num">01</span>
+          <p class="bl-text"><strong>Distribute EHA 2026 pre-read to haematology field teams by June 11</strong> — the day before EHA opens. The pre-read should foreground the HAVEN and HOHOEMI abstract key claims so MSLs can anticipate haematologist questions at EHA and in subsequent engagements.</p>
+        </div>
+        <div class="bottom-line-item">
+          <span class="bl-num">02</span>
+          <p class="bl-text"><strong>Schedule Guy Young advisory board call for July 2026</strong> to assess the real-world resonance of the EHA pediatric data and co-design the A6 pediatric evidence package with practitioner input. This moves MO5 from Gap toward Sufficient by Q3 2026.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources"><strong>Sources:</strong> EHA 2026 Abstracts EP1247, S240, PB2387 (pre-read) · HAVEN pediatric extension · HOHOEMI LT follow-up · Guy Young, Flora Peyvandi EHA presentations</div>
+      <div class="footer-disc">For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-hemlibra -->
+
+  <!-- ─ Brief 5: Vabysmo ─ -->
+  <div id="brief-vabysmo" class="brief-content" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-caution">Education Gap</span>
+      <span class="tag tag-info">Vabysmo · Retina</span>
+      <span class="eyebrow-date">June 5, 2026 &middot; 7:00 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      Ophthalmologists understand Vabysmo's efficacy.
+      <em>They do not yet understand why dual inhibition of VEGF-A and Ang-2 matters clinically.</em>
+    </h1>
+
+    <p class="brief-lede">Two MSL field reports confirm a consistent pattern in retina specialist conversations: Vabysmo is acknowledged as efficacious, but the bispecific mechanism — and specifically why blocking both VEGF-A and Ang-2 provides a different and potentially durable benefit compared to VEGF-A blockade alone — is not landing. Practitioners default to outcome-equivalence framing ("it works as well as Eylea HD") rather than mechanistic differentiation. This is a Medical Affairs education problem, not an efficacy problem.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">Product Focus</span><span class="meta-value">Vabysmo (faricimab)</span></div>
+      <div class="meta-item"><span class="meta-label">Signal Type</span><span class="meta-value warn">&#9679; Education Gap · 2 Territories</span></div>
+      <div class="meta-item"><span class="meta-label">MO Impact</span><span class="meta-value dim">MO4 — Bispecific Education</span></div>
+      <div class="meta-item"><span class="meta-label">Action Owner</span><span class="meta-value dim">MSL Ophthalmology · A5</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; Mechanistic Education Gap</div>
+      <p class="situation-body"><strong>The gap:</strong> Retina specialists are using Vabysmo primarily on the basis of Phase 3 non-inferiority to aflibercept. They are not yet using it on the basis of its mechanistic differentiation — dual pathway blockade and the hypothesis that Ang-2 inhibition provides additional benefit in the inflammatory component of wet AMD and DME. Eylea HD's extended dosing interval is the main competitive counter. The answer to Eylea HD's interval claim is not outcome-equivalence — it is mechanistic differentiation. The bispecific education story is the asset; it is not being deployed effectively.</p>
+    </div>
+
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Education Gap · Mechanism</span></div>
+      <h2 class="section-h2">Why dual VEGF-A + Ang-2 blockade matters — the three-sentence version that field teams need.</h2>
+      <div class="pills"><span class="pill pill-watch">Education Action</span></div>
+      <p class="section-body">The bispecific mechanism rationale in three sentences: (1) VEGF-A drives initial vessel leakage in both wet AMD and DME. (2) Ang-2 sustains vascular destabilization and promotes the inflammatory microenvironment that perpetuates leakage — blocking VEGF-A alone does not address this. (3) Faricimab's dual blockade of both pathways is the mechanistic basis for the hypothesis that it provides more complete vascular stabilization, with the goal of less frequent injections over time. This is the message that differentiates Vabysmo from Eylea HD on mechanism — not outcomes equivalence. MSLs need this delivered consistently.</p>
+      <div class="fvq">
+        <div class="fvq-label">&#8594; Field Validation Question</div>
+        <p class="fvq-text">When you explain the bispecific mechanism to a retina specialist, which part generates the most curiosity — the Ang-2 pathway itself, the clinical rationale for combining both targets, or the implication for injection frequency over time?</p>
+      </div>
+    </div>
+
+    <div class="bottom-line" style="margin-top:28px">
+      <div class="bottom-line-header">
+        <span class="bottom-line-label">&#9654; Bottom Line · 1 Action</span>
+      </div>
+      <div class="bottom-line-items">
+        <div class="bottom-line-item">
+          <span class="bl-num">01</span>
+          <p class="bl-text"><strong>Develop the "three-sentence bispecific mechanism" leave-behind (A5)</strong> as a simple, visually clear mechanism diagram for retina specialist conversations. The goal is to shift the conversation from outcomes equivalence to mechanistic differentiation — which is a more defensible and durable position than matching Eylea HD's interval claims.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources"><strong>Sources:</strong> MSL field reports (Boston, Amsterdam) · YOSEMITE/RHINE 2yr data · TENAYA/LUCERNE 3yr update</div>
+      <div class="footer-disc">For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-vabysmo -->
+
+  <!-- ─ Brief 6: Biosimilar ─ -->
+  <div id="brief-biosimilar" class="brief-content" style="max-width:780px;margin:0 auto;padding:28px 36px 80px;">
+
+    <div class="brief-eyebrow">
+      <span class="tag tag-outline">Intelligence Brief</span>
+      <span class="tag tag-caution">Competitive Monitor</span>
+      <span class="tag tag-info">Phesgo · Herceptin SC</span>
+      <span class="eyebrow-date">May 28, 2026 &middot; 7:00 AM ET</span>
+    </div>
+
+    <h1 class="brief-headline">
+      Trastuzumab biosimilar entry is accelerating in European markets.
+      <em>Herceptin SC and Phesgo's SC convenience advantage is the differentiation anchor.</em>
+    </h1>
+
+    <p class="brief-lede">As IV trastuzumab biosimilars continue to gain formulary position at academic medical centers in Germany, France, and the Nordics, the Roche HER2 differentiation strategy is shifting toward SC formulations — where biosimilar competition remains limited. Herceptin SC and Phesgo SC both provide the convenience advantage (8-minute injection vs 30–90-minute IV) that biosimilar manufacturers have not replicated. The differentiation brief (A10, Started) is the key asset for this conversation.</p>
+
+    <div class="brief-meta">
+      <div class="meta-item"><span class="meta-label">Products</span><span class="meta-value">Phesgo SC · Herceptin SC</span></div>
+      <div class="meta-item"><span class="meta-label">Signal Type</span><span class="meta-value warn">&#9679; Formulary Pressure · Europe</span></div>
+      <div class="meta-item"><span class="meta-label">MO Impact</span><span class="meta-value dim">MO1 — SC Adoption</span></div>
+      <div class="meta-item"><span class="meta-label">Action Owner</span><span class="meta-value dim">MSL Oncology Europe · A10</span></div>
+    </div>
+
+    <div class="situation-room">
+      <div class="situation-label">&#9679; Situation Room &nbsp;&middot;&nbsp; Biosimilar Pressure</div>
+      <p class="situation-body"><strong>The strategic position:</strong> IV trastuzumab biosimilars at 30–50% lower acquisition cost are winning formulary decisions at P&amp;T committees that focus on cost per vial. The correct competitive response is not to compete on cost — it is to shift the conversation to total cost of care, including chair time, nursing resource, and patient convenience. SC formulations reduce infusion chair time by 75–90% compared to IV. In a high-volume academic infusion center, SC conversion across the HER2 portfolio represents meaningful chair-time savings. This argument has traction with pharmacy directors; it has less traction with oncologists who are not involved in chair scheduling.</p>
+    </div>
+
+    <div class="brief-section" style="animation-delay:0.05s">
+      <div class="section-number"><span class="section-num">01</span><span class="section-cat">Competitive · Biosimilar Formulary</span></div>
+      <h2 class="section-h2">The correct conversation partner for biosimilar formulary decisions is the pharmacy director — not the oncologist.</h2>
+      <div class="pills"><span class="pill pill-watch">Strategic Positioning</span></div>
+      <p class="section-body">Formulary substitution decisions for trastuzumab are made by P&amp;T committees — and the driving voice is often the pharmacy director, not the prescribing oncologist. The differentiation brief (A10) should be designed for a pharmacy director audience: chair-time savings model, total cost of care calculation, and the SC conversion path. Oncologists are most influenced by peer data and patient preference — the nursing workflow argument (AI1) complements the pharmacy director conversation by removing the only remaining operational barrier to SC conversion once formulary access is secured.</p>
+    </div>
+
+    <div class="bottom-line" style="margin-top:28px">
+      <div class="bottom-line-header">
+        <span class="bottom-line-label">&#9654; Bottom Line · 2 Actions</span>
+      </div>
+      <div class="bottom-line-items">
+        <div class="bottom-line-item">
+          <span class="bl-num">01</span>
+          <p class="bl-text"><strong>Complete A10 (biosimilar differentiation brief)</strong> with a pharmacy director version that includes a chair-time savings model. Prioritize the three European markets with the highest biosimilar formulary pressure: Germany, France, and the UK.</p>
+        </div>
+        <div class="bottom-line-item">
+          <span class="bl-num">02</span>
+          <p class="bl-text"><strong>Pair A10 with the SC inertia response (A1)</strong> — both are needed for a complete SC conversion strategy. The pharmacy director argument opens the door; the nurse workflow checklist keeps it open. Treating them as a connected pair is the right field execution approach.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-footer">
+      <div class="footer-sources"><strong>Sources:</strong> European formulary tracking (Germany, France, Nordics) · Herceptin SC vs IV chair-time data · SABCS 2025 biosimilar landscape review</div>
+      <div class="footer-disc">For internal use only. Not for distribution outside Roche Medical Affairs.</div>
+    </div>
+  </div><!-- #brief-biosimilar -->
+
+  </div><!-- #view-brief -->
+
+  <!-- ══ VIEW: SIGNAL VELOCITY ══════════════════ -->
+  <div id="view-velocity" class="view">
+    <div class="vel-header">
+      <div>
+        <div class="vel-title">Signal Velocity</div>
+        <div class="vel-subtitle">Roche portfolio · ASCO 2026 · Week of June 9, 2026</div>
+      </div>
+    </div>
+
+    <div class="vel-stats">
+      <div class="vel-stat">
+        <div class="vel-stat-label">Active Signals</div>
+        <div class="vel-stat-value">18</div>
+      </div>
+      <div class="vel-stat">
+        <div class="vel-stat-label">Accelerating</div>
+        <div class="vel-stat-value green">3</div>
+      </div>
+      <div class="vel-stat">
+        <div class="vel-stat-label">Watch</div>
+        <div class="vel-stat-value amber">4</div>
+      </div>
+      <div class="vel-stat">
+        <div class="vel-stat-label">Alerts</div>
+        <div class="vel-stat-value red">2</div>
+      </div>
+    </div>
+
+    <table class="vel-table">
+      <thead>
+        <tr>
+          <th>Signal</th>
+          <th>Mentions (7d)</th>
+          <th>Share of Voice</th>
+          <th>Velocity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="vel-signal-name">DESTINY-Breast06 · HER2-ultralow</div>
+            <div class="vel-signal-cat">Competitive · T-DXd</div>
+          </td>
+          <td>
+            <div class="vel-mentions">2,847</div>
+            <div class="vel-mentions-sub">+94% vs prev week</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill red" style="width:88%"></div></div>
+              <span class="vel-bar-pct red">88%</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-hot">+94% &#8593;&#8593;</div>
+              <div class="vel-vel-lbl">Hot</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="vel-signal-name">Phesgo SC Neoadjuvant Data — ASCO oral</div>
+            <div class="vel-signal-cat">Phesgo · HER2+ early BC</div>
+          </td>
+          <td>
+            <div class="vel-mentions">1,142</div>
+            <div class="vel-mentions-sub">+38% vs prev week</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill green" style="width:62%"></div></div>
+              <span class="vel-bar-pct green">62%</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-acc">+38% &#8593;</div>
+              <div class="vel-vel-lbl">Accelerating</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="vel-signal-name">POLARIX FL update — Salles</div>
+            <div class="vel-signal-cat">Polivy · Follicular Lymphoma</div>
+          </td>
+          <td>
+            <div class="vel-mentions">687</div>
+            <div class="vel-mentions-sub">+22% vs prev week</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill ink" style="width:47%"></div></div>
+              <span class="vel-bar-pct ink">47%</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-acc">+22% &#8593;</div>
+              <div class="vel-vel-lbl">Accelerating</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="vel-signal-name">Morschhauser · tafasitamab endorsements</div>
+            <div class="vel-signal-cat">KOL Divergence · Polivy DLBCL</div>
+          </td>
+          <td>
+            <div class="vel-mentions">214</div>
+            <div class="vel-mentions-sub">Alignment: 73 → 61</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill amber" style="width:31%"></div></div>
+              <span class="vel-bar-pct amber">31%</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-hot">&#8595; Declining</div>
+              <div class="vel-vel-lbl">Alert</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="vel-signal-name">Phesgo SC inertia · nurse workflow</div>
+            <div class="vel-signal-cat">Field Pattern · ×4 territories</div>
+          </td>
+          <td>
+            <div class="vel-mentions">4</div>
+            <div class="vel-mentions-sub">Independent MSL reports</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill amber" style="width:18%"></div></div>
+              <span class="vel-bar-pct amber">Pattern</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-warm">Confirmed &#8593;</div>
+              <div class="vel-vel-lbl">Watch</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="vel-signal-name">MO5 Hemlibra Pediatric Evidence Gap</div>
+            <div class="vel-signal-cat">Evidence Gap · EHA 2026 pre-read</div>
+          </td>
+          <td>
+            <div class="vel-mentions">3</div>
+            <div class="vel-mentions-sub">KOL conversations + EHA abstracts</div>
+          </td>
+          <td>
+            <div class="vel-bar-wrap">
+              <div class="vel-bar-track"><div class="vel-bar-fill info" style="width:22%"></div></div>
+              <span class="vel-bar-pct info">Gap</span>
+            </div>
+          </td>
+          <td>
+            <div class="vel-vel">
+              <div class="vel-vel-val vel-acc">Closing &#8593;</div>
+              <div class="vel-vel-lbl">EHA 2026</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div><!-- #view-velocity -->
+
+  <!-- ══ VIEW: NARRATIVE MAP ══════════════════ -->
+  <div id="view-narrative" class="view">
+    <div class="narr-header">
+      <div class="narr-title">KOL Narrative Map</div>
+      <div class="narr-subtitle">Roche portfolio · June 2026 · 8 key KOLs</div>
+    </div>
+
+    <div class="narr-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Aligned</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--info)"></div> Build</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Monitor</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Diverging</div>
+    </div>
+
+    <div class="narr-map-container">
+      <svg class="narr-svg-wrap" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="60" y1="20" x2="60" y2="250" stroke="rgba(20,22,26,0.12)" stroke-width="1"/>
+        <line x1="60" y1="250" x2="760" y2="250" stroke="rgba(20,22,26,0.12)" stroke-width="1"/>
+        <text x="55" y="30" font-size="9" fill="#5A5E62" text-anchor="end" font-family="IBM Plex Mono">High</text>
+        <text x="55" y="250" font-size="9" fill="#5A5E62" text-anchor="end" font-family="IBM Plex Mono">Low</text>
+        <text x="55" y="140" font-size="9" fill="#5A5E62" text-anchor="end" font-family="IBM Plex Mono" transform="rotate(-90 55 140)">Influence</text>
+        <text x="410" y="268" font-size="9" fill="#5A5E62" text-anchor="middle" font-family="IBM Plex Mono">Alignment with Roche Portfolio →</text>
+
+        <!-- Grid lines -->
+        <line x1="60" y1="135" x2="760" y2="135" stroke="rgba(20,22,26,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="410" y1="20" x2="410" y2="250" stroke="rgba(20,22,26,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- KOL nodes -->
+        <!-- Sara Hurvitz: High influence, Strong alignment -->
+        <circle cx="680" cy="45" r="18" fill="rgba(63,165,106,0.15)" stroke="#3FA56A" stroke-width="1.5"/>
+        <text x="680" y="49" font-size="9" font-weight="700" fill="#3FA56A" text-anchor="middle" font-family="Manrope">SH</text>
+        <text x="680" y="72" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Hurvitz</text>
+
+        <!-- Javier Cortés: High influence, Very strong alignment -->
+        <circle cx="740" cy="60" r="18" fill="rgba(63,165,106,0.15)" stroke="#3FA56A" stroke-width="1.5"/>
+        <text x="740" y="64" font-size="9" font-weight="700" fill="#3FA56A" text-anchor="middle" font-family="Manrope">JC</text>
+        <text x="740" y="87" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Cortés</text>
+
+        <!-- Nadia Harbeck: High influence, Aligned -->
+        <circle cx="620" cy="52" r="16" fill="rgba(63,165,106,0.12)" stroke="#3FA56A" stroke-width="1.5"/>
+        <text x="620" y="56" font-size="8" font-weight="700" fill="#3FA56A" text-anchor="middle" font-family="Manrope">NH</text>
+        <text x="620" y="77" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Harbeck</text>
+
+        <!-- Gilles Salles: High influence, Strong alignment -->
+        <circle cx="700" cy="90" r="17" fill="rgba(63,165,106,0.12)" stroke="#3FA56A" stroke-width="1.5"/>
+        <text x="700" y="94" font-size="9" font-weight="700" fill="#3FA56A" text-anchor="middle" font-family="Manrope">GS</text>
+        <text x="700" y="116" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Salles</text>
+
+        <!-- Sherene Loi: Medium-high influence, Monitor -->
+        <circle cx="500" cy="75" r="15" fill="rgba(224,161,46,0.12)" stroke="#E0A12E" stroke-width="1.5"/>
+        <text x="500" y="79" font-size="8" font-weight="700" fill="#E0A12E" text-anchor="middle" font-family="Manrope">SL</text>
+        <text x="500" y="100" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Loi</text>
+
+        <!-- Franck Morschhauser: High influence, Declining -->
+        <circle cx="320" cy="80" r="17" fill="rgba(220,74,65,0.12)" stroke="#DC4A41" stroke-width="1.5"/>
+        <text x="320" y="84" font-size="9" font-weight="700" fill="#DC4A41" text-anchor="middle" font-family="Manrope">FM</text>
+        <text x="320" y="106" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Morschhauser</text>
+        <!-- Decline arrow -->
+        <line x1="320" y1="100" x2="275" y2="110" stroke="#DC4A41" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-red)"/>
+
+        <!-- Guy Young: Medium influence, Aligned (haematology) -->
+        <circle cx="580" cy="150" r="14" fill="rgba(59,130,246,0.12)" stroke="#3B82F6" stroke-width="1.5"/>
+        <text x="580" y="154" font-size="8" font-weight="700" fill="#3B82F6" text-anchor="middle" font-family="Manrope">GY</text>
+        <text x="580" y="174" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Guy Young</text>
+
+        <!-- Pravin Dugel: Medium influence, Build -->
+        <circle cx="460" cy="170" r="13" fill="rgba(59,130,246,0.10)" stroke="#3B82F6" stroke-width="1.5"/>
+        <text x="460" y="174" font-size="8" font-weight="700" fill="#3B82F6" text-anchor="middle" font-family="Manrope">PD</text>
+        <text x="460" y="193" font-size="8" fill="#14161A" text-anchor="middle" font-family="Manrope">Dugel</text>
+
+        <!-- Arrow marker for decline -->
+        <defs>
+          <marker id="arrow-red" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#DC4A41"/>
+          </marker>
+        </defs>
+
+        <!-- Product labels in corners -->
+        <text x="70" y="30" font-size="8" fill="#5A5E62" font-family="IBM Plex Mono">BREAST ONCOLOGY</text>
+        <text x="70" y="220" font-size="8" fill="#5A5E62" font-family="IBM Plex Mono">HAEMATOLOGY / OPHTHALMO</text>
+        <text x="620" y="245" font-size="8" fill="#3FA56A" font-family="IBM Plex Mono">← ALIGNED</text>
+        <text x="90" y="245" font-size="8" fill="#DC4A41" font-family="IBM Plex Mono">DIVERGING →</text>
+      </svg>
+    </div>
+
+    <div class="narr-cards">
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Sara Hurvitz</span>
+          <span class="narr-badge nb-acc">Aligned</span>
+        </div>
+        <p class="narr-card-body">Clearest public defender of Phesgo curative-setting position at ASCO 2026. High-value field messaging resource.</p>
+        <div class="narr-card-driver">Narrative Driver</div>
+        <div class="narr-card-driver-val">APHINITY + pCR data · ASCO press briefing</div>
+      </div>
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Franck Morschhauser</span>
+          <span class="narr-badge nb-risk">Diverging</span>
+        </div>
+        <p class="narr-card-body">73 → 61 alignment in 60 days. Tafasitamab endorsements at ASCO. Re-engagement window: 8 weeks.</p>
+        <div class="narr-card-driver">Alert Driver</div>
+        <div class="narr-card-driver-val">L-MIND + tafasitamab oral presentation</div>
+      </div>
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Javier Cortés</span>
+          <span class="narr-badge nb-acc">Aligned · Co-pub</span>
+        </div>
+        <p class="narr-card-body">Proposed co-publication on sequencing framework. Highest ASCO 2026 HER2 Twitter reach.</p>
+        <div class="narr-card-driver">Opportunity Driver</div>
+        <div class="narr-card-driver-val">DESTINY-Breast06 + PHERGain sequencing</div>
+      </div>
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Gilles Salles</span>
+          <span class="narr-badge nb-acc">Aligned</span>
+        </div>
+        <p class="narr-card-body">POLARIX FL update presented at ASCO oral session. Strong counter-narrative to tafasitamab framing.</p>
+        <div class="narr-card-driver">Narrative Driver</div>
+        <div class="narr-card-driver-val">POLARIX 4yr OS signal · FL extension</div>
+      </div>
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Guy Young</span>
+          <span class="narr-badge nb-build">Build</span>
+        </div>
+        <p class="narr-card-body">Presenting HAVEN pediatric extension at EHA 2026. Advisory board candidate for A6 pediatric evidence package.</p>
+        <div class="narr-card-driver">Engagement Driver</div>
+        <div class="narr-card-driver-val">HAVEN peds extension · MO5 gap</div>
+      </div>
+      <div class="narr-card">
+        <div class="narr-card-header">
+          <span class="narr-card-name">Sherene Loi</span>
+          <span class="narr-badge nb-watch">Monitor</span>
+        </div>
+        <p class="narr-card-body">Biomarker complexity framing at ASCO 2026. Not a threat currently — monitor for citation patterns that could blur HER2-low vs HER2+ distinctions.</p>
+        <div class="narr-card-driver">Watch Driver</div>
+        <div class="narr-card-driver-val">HER2-ultralow biomarker overlap comments</div>
+      </div>
+    </div>
+  </div><!-- #view-narrative -->
+
+</main>
+</div><!-- #shell -->
+
+<!-- PERSONA OVERLAY -->
+<div id="overlay" onclick="if(event.target===this)closePersona()">
+  <div class="overlay-panel">
+    <div class="overlay-label">Personalize Brief</div>
+    <h2 class="overlay-heading">Customize your focus</h2>
+    <p class="overlay-subtext">Tell Aurivian what matters most in this meeting. The brief will prioritize signals, KOLs, and actions relevant to your role.</p>
+    <p class="overlay-prompt">What is the most important thing you want to be prepared for in the Ross &amp; Natasha meeting on Friday?</p>
+    <textarea class="overlay-textarea" placeholder="e.g. Competitive response to DESTINY-Breast06, SC inertia barrier strategy, Morschhauser re-engagement plan..."></textarea>
+    <div class="overlay-buttons">
+      <button class="btn-skip" onclick="closePersona()">Skip</button>
+      <button class="btn-save" onclick="closePersona()">Personalize Brief</button>
+    </div>
+    <p class="overlay-note">Your input is used to rank signal relevance. It is not stored or shared beyond this session.</p>
+  </div>
+</div>
+
+<script>
+function toggleSidebar() {
+  const shell = document.getElementById('shell');
+  const toggle = document.getElementById('sidebar-toggle');
+  shell.classList.toggle('collapsed');
+  toggle.textContent = shell.classList.contains('collapsed') ? '›' : '‹';
+}
+
+function switchBrief(card, briefId) {
+  document.querySelectorAll('.brief-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  document.querySelectorAll('.brief-content').forEach(c => c.classList.remove('active'));
+  const target = document.getElementById('brief-' + briefId);
+  if (target) target.classList.add('active');
+  document.getElementById('view-brief').classList.add('active');
+  document.querySelectorAll('.view').forEach(v => { if (v.id !== 'view-brief') v.classList.remove('active'); });
+  document.getElementById('nav-brief').classList.add('active');
+  document.getElementById('nav-velocity').classList.remove('active');
+  document.getElementById('nav-narrative').classList.remove('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function showView(viewId, navEl) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + viewId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  navEl.classList.add('active');
+  document.getElementById('main').scrollTop = 0;
+}
+
+function openPersona() {
+  document.getElementById('overlay').classList.add('open');
+}
+function closePersona() {
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// Animate velocity bars on load
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.querySelectorAll('.vel-bar-fill').forEach(function(bar) {
+      const w = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(function() { bar.style.width = w; }, 100);
+    });
+  }, 200);
+});
+</script>
+
+</body>
+</html>
