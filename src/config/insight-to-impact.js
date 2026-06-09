@@ -1,0 +1,32 @@
+export const INSIGHT_TO_IMPACT = [
+  {
+    id: 'i2i-1',
+    insight: 'Community oncologists requested a one-page SC administration guide for Phesgo.',
+    action: 'Laminated SC quick-reference card co-created with infusion nurses and deployed to 120 community centres across NA + EU5.',
+    outcome: '+31% SC Phesgo adoption rate in participating centres within 6 weeks. Nurse satisfaction with SC protocol clarity increased from 54% to 82%.',
+    timeframe: '6 weeks',
+    impactScore: 9,
+    relatedInsight: 'AI1',
+    relatedMO: 'MO1',
+  },
+  {
+    id: 'i2i-2',
+    insight: 'Haematologists requested a practical DLBCL treatment algorithm for CAR-T eligible vs. ineligible patients.',
+    action: 'One-page Polivy patient-selection algorithm developed with advisory board KOLs and disseminated at EHA 2026 and via MSL field team.',
+    outcome: 'Polivy MSL interaction quality scores increased from 67 to 79. Physician-reported clarity on Polivy patient selection improved by 28%.',
+    timeframe: '8 weeks',
+    impactScore: 7,
+    relatedInsight: 'AI3',
+    relatedMO: 'MO2',
+  },
+  {
+    id: 'i2i-3',
+    insight: 'Neurologists requested long-term PPMS real-world outcome data to counsel patients on lifetime disability trajectory.',
+    action: 'Ocrevus open-label extension long-term outcomes summary published and distributed to 45 high-prescribing neurology centres; MSL-led scientific exchange programme launched.',
+    outcome: '22 neurologists progressed from Knowledgeable → Intent to change practice on PPMS initiation thresholds. 4 academic centres updated their PPMS treatment protocols.',
+    timeframe: '10 weeks',
+    impactScore: 6,
+    relatedInsight: 'AI4',
+    relatedMO: 'MO3',
+  },
+];

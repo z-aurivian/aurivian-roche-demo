@@ -1,0 +1,12 @@
+export const ACTIONS = [
+  { id: 'A1',  title: 'Develop laminated SC administration quick-reference card for infusion nurses',          fromInsightRef: 'AI1', moRef: 'MO1', owner: 'Medical Comms',  dueBy: '2026-Q3', status: 'Started',  strategyImpact: 'Confirmed' },
+  { id: 'A2',  title: 'Commission Phesgo chair-time reduction case study across 5 community centres',         fromInsightRef: 'AI1', moRef: 'MO1', owner: 'Field Medical', dueBy: '2026-Q3', status: 'Accepted', strategyImpact: 'Confirmed' },
+  { id: 'A3',  title: 'Prepare ASCO 2026 HER2 competitive landscape MSL briefing deck',                      fromInsightRef: 'AI2', moRef: 'MO1', owner: 'Field Medical', dueBy: '2026-Q2', status: 'Started',  strategyImpact: 'Changed'  },
+  { id: 'A4',  title: 'Develop HER2+ treatment sequencing algorithm for SC vs. T-DXd vs. biosimilar IV',     fromInsightRef: 'AI2', moRef: 'MO1', owner: 'Medical Comms',  dueBy: '2026-Q3', status: 'Proposed', strategyImpact: null       },
+  { id: 'A5',  title: 'Convene Polivy patient-selection advisory board (CAR-T eligible vs. ineligible)',     fromInsightRef: 'AI3', moRef: 'MO2', owner: 'Field Medical', dueBy: '2026-Q3', status: 'Accepted', strategyImpact: 'Confirmed' },
+  { id: 'A6',  title: 'Commission DLBCL community-haematologist one-page algorithm (Polivy vs. peers)',      fromInsightRef: 'AI3', moRef: 'MO2', owner: 'Medical Comms',  dueBy: '2026-Q4', status: 'Proposed', strategyImpact: null       },
+  { id: 'A7',  title: 'Scope Ocrevus PPMS open-label extension long-term RWE sub-analysis with HEOR',       fromInsightRef: 'AI4', moRef: 'MO3', owner: 'HEOR',           dueBy: '2026-Q4', status: 'Proposed', strategyImpact: null       },
+  { id: 'A8',  title: 'Develop Ang-2/VEGF-A bispecific mechanism education module (slide + animation)',     fromInsightRef: 'AI5', moRef: 'MO4', owner: 'Medical Comms',  dueBy: '2026-Q3', status: 'Started',  strategyImpact: 'Confirmed' },
+  { id: 'A9',  title: 'Initiate long-term pediatric joint health registry query from HAVEN extension data', fromInsightRef: 'AI6', moRef: 'MO5', owner: null,              dueBy: null,      status: 'Proposed', strategyImpact: null       },
+  { id: 'A10', title: 'Develop Phesgo vs. biosimilar combination 2-page formulary differentiation brief',  fromInsightRef: 'AI7', moRef: 'MO1', owner: 'Field Medical', dueBy: '2026-Q3', status: 'Started',  strategyImpact: 'Confirmed' },
+];
